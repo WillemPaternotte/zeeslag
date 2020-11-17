@@ -8,23 +8,36 @@ def printScreen(invoer): #functie die het veld overzichtelijk print
 
 def maakBord(lengte):
     bord = []
-    bord.append([])
-    bord[0].append(" ")
-    for i in range(0, lengte):
-        bord[0].append( chr(65 + i) )
-    bord[0].append(" ")
+    lijnAlfabet(bord, lengte, 0)
     for i in range(1, lengte+1):
         bord.append([])
-        bord[i].append(i)
+        nummersBord(bord, i)
         for i2 in range(lengte):
             bord[i].append(0)
-        bord[i].append(i)
-    bord.append([])
-    bord[lengte +1].append(" ")
-    for i in range(0, lengte):
-        bord[lengte +1].append( chr(65 + i) )
-    bord[lengte +1].append(" ")
+        nummersBord(bord, i)
+    lijnAlfabet(bord, lengte, lengte+1)
     return bord
+
+def lijnAlfabet(bord, lengte, Pos): #maakt de rij aplhabet bij bord
+    bord.append([])
+    bord[Pos].append("  ") # zodat het alles op 1 kolom recht staat
+    for i in range(0, lengte):
+        bord[Pos].append( chr(65 + i) )
+    bord[Pos].append("  ") # zodat het alles op 1 kolom recht staat
+
+def nummersBord(bord, i): #Zodat de cijfers aan de rand van het bord mooi printen, anders staan lijnen na 10 breder door extra teken
+    if i < 10:
+        value = " " + str(i)
+        bord[i].append(value)
+    else:
+        bord[i].append(i) 
+
+def bordgrootte(): 
+    lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
+    while not(lengte <= 24): #Maximale groot 24x24 want 24 letters in het alfabet 
+        print("De maximale grootte is 24x24")
+        lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
+    return lengte
 
 def plaatsSchepen(aantal, bord, bordgrootte):
     schepen = 0
@@ -39,7 +52,7 @@ def plaatsSchepen(aantal, bord, bordgrootte):
         Yas[x] = "x"
         schepen += 1
 
-def checkScheep(x, y, bord):
+def checkScheep(x, y, bord): #cehcked over er schepen in een 3x3 rond de gekoze positie zijn
     check = False
     y -= 1
     for i in range(3):
@@ -64,8 +77,8 @@ def raden(bord1):
         print("Raak!")
 
 
-bordgrootte = int(input("bord groote"))
-bord = maakBord(bordgrootte)
-plaatsSchepen(5, bord, bordgrootte)
-printScreen(bord)
-raden(bord)
+bordgrootte = bordgrootte()
+bordje = maakBord(bordgrootte)
+plaatsSchepen(5, bordje, bordgrootte)
+printScreen(bordje)
+# raden(bord)
