@@ -54,11 +54,11 @@ def checkScheep(x, y, bord):
 
 def raden(bord1):
     gok = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
-    while not(gok[0:1].isalpha() and gok[1:2].isnumeric() and len(gok) == 2): #checkt juiste input format
+    while not(gok[0].isalpha() and gok[1].isnumeric() and len(gok) == 2): #checkt juiste input format
         print("Foute input!")
         gok = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
-    x = ord(gok[0:1]) - 64
-    y = int(gok[1:2])
+    x = ord(gok[0]) - 64
+    y = int(gok[1])
     Yas = bord1[y]
     if Yas[x] == "x":
         print("Raak!")
