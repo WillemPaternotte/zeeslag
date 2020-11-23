@@ -1,4 +1,5 @@
 import random
+import math
 
 def printScreen(invoer): #functie die het veld overzichtelijk print
     for item in invoer:
@@ -32,9 +33,9 @@ def nummersBord(bord, i): #Zodat de cijfers aan de rand van het bord mooi printe
     else:
         bord[i].append(i) 
 
-def bordgrootte(): 
+def bordsize(): 
     lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
-    while not(lengte <= 24): #Maximale groot 24x24 want 24 letters in het alfabet 
+    while not(2 < lengte <= 24): #Maximale groot 24x24 want 24 letters in het alfabet kleiner dan 3x3 niet leuk
         print("De maximale grootte is 24x24")
         lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
     return lengte
@@ -44,12 +45,10 @@ def plaatsSchepen(aantal, bord, bordgrootte):
     while schepen < aantal:
         x = random.randint(1, bordgrootte)
         y = random.randint(1, bordgrootte)
-        Yas = bord[y]
         while checkScheep(x, y, bord) == True:
             x = random.randint(1, bordgrootte)
             y = random.randint(1, bordgrootte)
-            Yas = bord[y]
-        Yas[x] = "x"
+        bord[y][x] = "x"
         schepen += 1
 
 def checkScheep(x, y, bord): #cehcked over er schepen in een 3x3 rond de gekoze positie zijn
@@ -57,28 +56,42 @@ def checkScheep(x, y, bord): #cehcked over er schepen in een 3x3 rond de gekoze 
     y -= 1
     for i in range(3):
         Xas = x-1
-        Yas = bord[y]
         while Xas - x < 2:
-            if Yas[Xas] == "x":
+            if bord[y][Xas] == "x":
                 check = True
             Xas += 1
         y+=1
     return check
 
-def raden(bord1):
+def raden(bordA, bordB, score, bordgrootte):
     gok = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
-    while not(gok[0].isalpha() and gok[1].isnumeric() and len(gok) == 2): #checkt juiste input format
+    while not(len(gok) == 2 and gok[0].isalpha() and gok[1].isnumeric() and ord(gok[0]) - 64 <= bordgrootte and int(gok[1]) <= bordgrootte ): #checkt juiste input format en of de pos bestaat
         print("Foute input!")
         gok = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
     x = ord(gok[0]) - 64
     y = int(gok[1])
-    Yas = bord1[y]
-    if Yas[x] == "x":
+    if bordA[y][x] == "x":
+        bordB[y][x] = "x"
         print("Raak!")
+        score +=1
+    else:
+        bordB[y][x] = "-"
+        print("mis!")
+    return score
 
+def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met programma
+    bordgrootte = bordsize()
+    bordAschepen = maakBord(bordgrootte)
+    bordBspelen = maakBord(bordgrootte)
+    schepen = math.floor(bordgrootte * (math.sqrt(bordgrootte)/2) -1)#geweldige formule die meestal werkt behalve bij 8
+    score = 0
+    beurten = 0
+    plaatsSchepen(schepen, bordAschepen, bordgrootte)
+    while not(score == schepen):
+        printScreen(bordBspelen)
+        score = raden(bordAschepen, bordBspelen, score, bordgrootte)
+        printScreen(bordBspelen)
+        beurten +=1
+    print("gewonnen")
 
-bordgrootte = bordgrootte()
-bordje = maakBord(bordgrootte)
-plaatsSchepen(5, bordje, bordgrootte)
-printScreen(bordje)
-# raden(bord)
+main()
