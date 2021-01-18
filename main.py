@@ -1,10 +1,12 @@
 import random
 import math
+import os
+import time
 
 def printScreen(invoer): #functie die het veld overzichtelijk print
     for item in invoer:
         for i in item:
-            print(i, end="|")
+            print(i, end=" ")
         print("")  # zodat de volgende line niet opzelfde line print
 
 def maakBord(lengte):
@@ -14,7 +16,7 @@ def maakBord(lengte):
         bord.append([])
         nummersBord(bord, i)
         for i2 in range(lengte):
-            bord[i].append(0)
+            bord[i].append("-")
         nummersBord(bord, i)
     lijnAlfabet(bord, lengte, lengte+1)
     return bord
@@ -60,14 +62,21 @@ def checkScheep(x, y, bord): #cehcked over er schepen in een 3x3 rond de gekoze 
             if bord[y][Xas] == "x":
                 check = True
             Xas += 1
-        y+=1
+        y+= 1
     return check
 
+def checkGokVorm(bordgrootte, bord):
+    invoer = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
+    while not(len(invoer) == 2 and invoer[0].isalpha() and invoer[1].isnumeric() and ord(invoer[0]) - 64 <= bordgrootte and int(invoer[1]) <= bordgrootte) or bord[int(invoer[1])][ord(invoer[0]) - 64] == "~" or bord[int(invoer[1])][ord(invoer[0]) - 64] == "x": #checkt juiste input format en of de pos bestaat
+        if  not(len(invoer) == 2 and invoer[0].isalpha() and invoer[1].isnumeric() and ord(invoer[0]) - 64 <= bordgrootte and int(invoer[1]) <= bordgrootte):
+            print("foute input!")
+        else:
+            print("deze positie heb je al gegokt!")
+        invoer = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
+    return invoer
+
 def raden(bordA, bordB, score, bordgrootte):
-    gok = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
-    while not(len(gok) == 2 and gok[0].isalpha() and gok[1].isnumeric() and ord(gok[0]) - 64 <= bordgrootte and int(gok[1]) <= bordgrootte ): #checkt juiste input format en of de pos bestaat
-        print("Foute input!")
-        gok = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
+    gok = checkGokVorm(bordgrootte, bordB)
     x = ord(gok[0]) - 64
     y = int(gok[1])
     if bordA[y][x] == "x":
@@ -75,7 +84,7 @@ def raden(bordA, bordB, score, bordgrootte):
         print("Raak!")
         score +=1
     else:
-        bordB[y][x] = "-"
+        bordB[y][x] = "~"
         print("mis!")
     return score
 
@@ -88,10 +97,17 @@ def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met p
     beurten = 0
     plaatsSchepen(schepen, bordAschepen, bordgrootte)
     while not(score == schepen):
+        overgeblevenSchepen = schepen - score
+        os.system("cls")
+        print("Er zijn nog", overgeblevenSchepen, "schepen over.")
         printScreen(bordBspelen)
         score = raden(bordAschepen, bordBspelen, score, bordgrootte)
-        printScreen(bordBspelen)
         beurten +=1
+        # input() #zorgt ervoor dat pas naar de volgende beurt gaat na player input
+        time.sleep(.75) #mag dit?
+    printScreen(bordBspelen)
     print("gewonnen")
 
 main()
+
+
