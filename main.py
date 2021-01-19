@@ -36,7 +36,11 @@ def nummersBord(bord, i): #Zodat de cijfers aan de rand van het bord mooi printe
         bord[i].append(i) 
 
 def bordsize(): 
-    lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
+    lengte = input("Hoeveel bij hoeveel moet het bord groot zijn?: ")
+    while not lengte.isnumeric():
+        print("Kies een nummer")
+        lengte = input("Hoeveel bij hoeveel moet het bord groot zijn?: ")
+    lengte = int(lengte)
     while not(2 < lengte <= 24): #Maximale groot 24x24 want 24 letters in het alfabet kleiner dan 3x3 niet leuk
         print("De maximale grootte is 24x24")
         lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
@@ -120,6 +124,7 @@ def getVar(welke):
     dataTekst = bestand.readline()
     data = dataTekst.split(",")
     var = data[welke]
+    bestand.close()
     return var
 
 def getBord(welke, size):
@@ -135,6 +140,7 @@ def getBord(welke, size):
     for x in range(size+2):
         Bord.append([])
         Bord[x] = lijst[x].split(".")
+    bestand.close()
     return Bord
 
 def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met programma
