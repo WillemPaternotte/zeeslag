@@ -88,14 +88,71 @@ def raden(bordA, bordB, score, bordgrootte):
         print("mis!")
     return score
 
+def save(data, bordA, bordB): # algemene save functie slaat alles op
+    bestand = open("save.txt", "w")
+    for item in data:
+        bestand.write(str(item))
+        bestand.write(",")
+    bestand.write("\n")
+    saveBord(bordA, bestand)
+    saveBord(bordB, bestand)
+    bestand.close()
+
+def saveBord(bord, bestand): #write 1 bord op 1 line in een bestand
+    for rij in bord:
+        for item in rij:
+            bestand.write(item)
+            bestand.write(".")
+        bestand.write(",")
+    bestand.write("\n")
+
+def Data(State,Size,Score, Schepen, Beurten): #verzameld alle data en zet het inn een lijstje
+    data = []
+    data.append(State)
+    data.append(Size)
+    data.append(Score)
+    data.append(Schepen)
+    data.append(Beurten)
+    return data
+
+def getVar(welke):
+    bestand = open("save.txt", "r")
+    dataTekst = bestand.readline()
+    data = dataTekst.split(",")
+    var = data[welke]
+    return var
+
+def getBord(welke, size):
+    print(size)
+    bestand = open("save.txt", "r")
+    loop = 0
+    bordtekst = bestand.readline()
+    while loop < welke:
+        bordtekst = bestand.readline()
+        loop +=1
+    lijst = bordtekst.split(',')
+    Bord = []
+    for x in range(size+2):
+        Bord.append([])
+        Bord[x] = lijst[x].split(".")
+    return Bord
+
 def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met programma
-    bordgrootte = bordsize()
-    bordAschepen = maakBord(bordgrootte)
-    bordBspelen = maakBord(bordgrootte)
-    schepen = math.floor(bordgrootte * (math.sqrt(bordgrootte)/2) -1)#geweldige formule die meestal werkt behalve bij 8
-    score = 0
-    beurten = 0
-    plaatsSchepen(schepen, bordAschepen, bordgrootte)
+    if getVar(0) == "Game" and str.upper(input("Er is een save gevonden, om op deze save verder te spelen Druk: Y")) == "Y":
+        bordgrootte = int(getVar(1))
+        bordAschepen = getBord(1, bordgrootte)
+        bordBspelen =  getBord(2, bordgrootte)
+        score = int(getVar(2))
+        schepen = int(getVar(3)) 
+        beurten = int(getVar(4))
+    else:
+        bordgrootte = bordsize()
+        bordAschepen = maakBord(bordgrootte)
+        bordBspelen = maakBord(bordgrootte)
+        schepen = math.floor(bordgrootte * (math.sqrt(bordgrootte)/2) -1)#geweldige formule die meestal werkt behalve bij 8
+        score = 0
+        beurten = 0
+        plaatsSchepen(schepen, bordAschepen, bordgrootte)
     while not(score == schepen):
         overgeblevenSchepen = schepen - score
         os.system("cls")
@@ -103,9 +160,12 @@ def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met p
         printScreen(bordBspelen)
         score = raden(bordAschepen, bordBspelen, score, bordgrootte)
         beurten +=1
-        # input() #zorgt ervoor dat pas naar de volgende beurt gaat na player input
-        time.sleep(.75) #mag dit?
-    printScreen(bordBspelen)
+        time.sleep(.75) #mag dit? kleine delay zorgt voor soepelere erveraring
+        data = Data( "Game", bordgrootte, score, schepen, beurten)
+        save(data, bordAschepen, bordBspelen)# saved spel aan het einde van beurt
+    data = Data("Clear", bordgrootte, score, schepen, beurten)
+    save(data, bordAschepen, bordBspelen)
+    printScreen(bordBspelen)  
     print("gewonnen")
 
 main()
