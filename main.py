@@ -143,6 +143,9 @@ def getBord(welke, size):
     bestand.close()
     return Bord
 
+def welkom():
+    print("welkom bij zeeslag, ik zal eerst even kort het spel uitleggen.\ngeef als eerst op hoe groot je het bord zou willen hebben.\n Daarna zal de computer een aantal schepen plaatsen afhankelijk van de bordgrootte. \n Het is aan jou de taak om alle schepen te raken met zo min mogelijk beurten. \n Om een schip te raken typ je de coördinaten van de locatie waarvan je denkt dat een schip zit. \n Succes! ")
+
 def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met programma
     if getVar(0) == "Game" and str.upper(input("Er is een save gevonden, om op deze save verder te spelen Druk: Y")) == "Y":
         bordgrootte = int(getVar(1))
