@@ -162,7 +162,7 @@ def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met p
             plaatsSchepen(schepen, bordAschepen, bordgrootte)
         while not(score == schepen):
             overgeblevenSchepen = schepen - score
-            os.system("cls" if os.name == "win32" else "clear") # ;)
+            os.system("cls" if os.name == "nt" else "clear") # ;)
             print("Er zijn nog", overgeblevenSchepen, "schepen over.")
             printScreen(bordBspelen)
             score = raden(bordAschepen, bordBspelen, score, bordgrootte)
