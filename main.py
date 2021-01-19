@@ -100,6 +100,7 @@ def save(data, bordA, bordB): # algemene save functie slaat alles op
     bestand.write("\n")
     saveBord(bordA, bestand)
     saveBord(bordB, bestand)
+    bestand.close()
 
 def saveBord(bord, bestand): #write 1 bord op 1 line in een bestand
     for rij in bord:
@@ -161,7 +162,7 @@ def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met p
             plaatsSchepen(schepen, bordAschepen, bordgrootte)
         while not(score == schepen):
             overgeblevenSchepen = schepen - score
-            os.system("cls")
+            os.system("cls" if os.name == "nt" else "clear") # ;)
             print("Er zijn nog", overgeblevenSchepen, "schepen over.")
             printScreen(bordBspelen)
             score = raden(bordAschepen, bordBspelen, score, bordgrootte)
