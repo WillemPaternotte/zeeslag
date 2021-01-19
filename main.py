@@ -1,7 +1,7 @@
 import random
 import math
 import os
-import time
+import time #hola como robinm kan gebuerne
 
 def printScreen(invoer): #functie die het veld overzichtelijk print
     for item in invoer:
