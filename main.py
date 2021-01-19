@@ -144,7 +144,12 @@ def getBord(welke, size):
     return Bord
 
 def welkom():
-    print("welkom bij zeeslag, ik zal eerst even kort het spel uitleggen.\ngeef als eerst op hoe groot je het bord zou willen hebben.\n Daarna zal de computer een aantal schepen plaatsen afhankelijk van de bordgrootte. \n Het is aan jou de taak om alle schepen te raken met zo min mogelijk beurten. \n Om een schip te raken typ je de coördinaten van de locatie waarvan je denkt dat een schip zit. \n Succes! ")
+    print("""welkom bij zeeslag, ik zal eerst even kort het spel uitleggen.
+            Geef als eerst op hoe groot je het bord zou willen hebben.
+            Daarna zal de computer een aantal schepen plaatsen afhankelijk van de bordgrootte. 
+            Het is aan jou de taak om alle schepen te raken met zo min mogelijk beurten. 
+            Om een schip te raken typ je de coördinaten van de locatie waarvan je denkt dat een schip zit. 
+            Succes! """)
 
 def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met programma
     while True:
@@ -156,6 +161,7 @@ def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met p
             schepen = int(getVar(3)) 
             beurten = int(getVar(4))
         else:
+            welkom()
             bordgrootte = bordsize()
             bordAschepen = maakBord(bordgrootte)
             bordBspelen = maakBord(bordgrootte)
