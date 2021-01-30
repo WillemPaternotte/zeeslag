@@ -46,16 +46,37 @@ def bordsize():
         lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
     return lengte
 
-def plaatsSchepen(aantal, bord, bordgrootte):
+def plaatsSchepen(gamemode, aantal, bord1, bord2, bordgrootte):
     schepen = 0
-    while schepen < aantal:
-        x = random.randint(1, bordgrootte)
-        y = random.randint(1, bordgrootte)
-        while checkScheep(x, y, bord) == True:
+    if gamemode != "Y":
+        while schepen < aantal:
             x = random.randint(1, bordgrootte)
             y = random.randint(1, bordgrootte)
+            while checkScheep(x, y, bord) == True:
+                x = random.randint(1, bordgrootte)
+                y = random.randint(1, bordgrootte)
+            bord1[y][x] = "x"
+            schepen += 1
+    else:
+        plaatsZelfSchepen(aantal, bord1, bordgrootte)
+    plaatsZelfSchepen(aantal, bord2, bordgrootte)
+
+def plaatsZelfSchepen(aantal, bord, bordgrootte):
+    schepen = 0
+    print("Voor we kunnen spelen, moet je je schepen plaatsen!")
+    while schepen < aantal:
+        printScreen(bord)
+        pos = checkGokVorm(bordgrootte, bord, "Kies een positie(Typ keuze als de vorm A1): ")
+        x = ord(pos[0]) - 64
+        y = int(pos[1])
+        while checkScheep(x, y, bord) == True:
+            print("Schepen mogen elkaar niet raken")
+            pos = checkGokVorm(bordgrootte, bord, "Kies een positie(Typ keuze als de vorm A1): ")
+            x = ord(pos[0]) - 64
+            y = int(pos[1])
         bord[y][x] = "x"
-        schepen += 1
+        schepen +=1
+        os.system("cls" if os.name == "nt" else "clear")   
 
 def checkScheep(x, y, bord): #cehcked over er schepen in een 3x3 rond de gekoze positie zijn
     check = False
@@ -69,18 +90,18 @@ def checkScheep(x, y, bord): #cehcked over er schepen in een 3x3 rond de gekoze 
         y+= 1
     return check
 
-def checkGokVorm(bordgrootte, bord):
-    invoer = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
+def checkGokVorm(bordgrootte, bord, tekst):
+    invoer = str.upper(input(tekst))
     while not(len(invoer) == 2 and invoer[0].isalpha() and invoer[1].isnumeric() and ord(invoer[0]) - 64 <= bordgrootte and int(invoer[1]) <= bordgrootte) or bord[int(invoer[1])][ord(invoer[0]) - 64] == "~" or bord[int(invoer[1])][ord(invoer[0]) - 64] == "x": #checkt juiste input format en of de pos bestaat
         if  not(len(invoer) == 2 and invoer[0].isalpha() and invoer[1].isnumeric() and ord(invoer[0]) - 64 <= bordgrootte and int(invoer[1]) <= bordgrootte):
             print("foute input!")
         else:
-            print("deze positie heb je al gegokt!")
-        invoer = str.upper(input("Gok een positie(Typ gok als de vorm A1): "))
+            print("deze positie heb je al gekozen!")
+        invoer = str.upper(input(tekst))
     return invoer
 
 def raden(bordA, bordB, score, bordgrootte):
-    gok = checkGokVorm(bordgrootte, bordB)
+    gok = checkGokVorm(bordgrootte, bordB, "Gok een positie(Typ gok als de vorm A1): ")
     x = ord(gok[0]) - 64
     y = int(gok[1])
     if bordA[y][x] == "x":
@@ -92,14 +113,16 @@ def raden(bordA, bordB, score, bordgrootte):
         print("mis!")
     return score
 
-def save(data, bordA, bordB): # algemene save functie slaat alles op
+def save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen): # algemene save functie slaat alles op
     bestand = open("save.txt", "w")
     for item in data:
         bestand.write(str(item))
         bestand.write(",")
     bestand.write("\n")
-    saveBord(bordA, bestand)
-    saveBord(bordB, bestand)
+    saveBord(bordAschepen, bestand)
+    saveBord(bordBspelen, bestand)
+    saveBord(bordBschepen, bestand)
+    saveBord(bordAspelen, bestand)
     bestand.close()
 
 def saveBord(bord, bestand): #write 1 bord op 1 line in een bestand
@@ -110,13 +133,13 @@ def saveBord(bord, bestand): #write 1 bord op 1 line in een bestand
         bestand.write(",")
     bestand.write("\n")
 
-def Data(State,Size,Score, Schepen, Beurten): #verzameld alle data en zet het inn een lijstje
+def Data(State,Size,ScoreA, ScoreB, Schepen): #verzameld alle data en zet het inn een lijstje
     data = []
     data.append(State)
     data.append(Size)
-    data.append(Score)
+    data.append(ScoreA)
+    data.append(ScoreB)
     data.append(Schepen)
-    data.append(Beurten)
     return data
 
 def getVar(welke):
@@ -143,6 +166,13 @@ def getBord(welke, size):
     bestand.close()
     return Bord
 
+# def gameMode():
+#     print("Wil je local mulitplayer spelen? Druk Y: \nStandaard gamemode is tegen de Computer.")
+#     mode = str.upper(input())
+#     return mode
+    
+
+
 def welkom():
     print("""welkom bij zeeslag, ik zal eerst even kort het spel uitleggen.
             Geef als eerst op hoe groot je het bord zou willen hebben.
@@ -150,6 +180,15 @@ def welkom():
             Het is aan jou de taak om alle schepen te raken met zo min mogelijk beurten. 
             Om een schip te raken typ je de coördinaten van de locatie waarvan je denkt dat een schip zit. 
             Succes! """)
+def beurt(schepen, score, bordSpelen, bordSchepen, bordgrootte):
+    overgeblevenSchepen = schepen - score
+    os.system("cls" if os.name == "nt" else "clear") # ;)
+    print(schepen)
+    print("Er zijn nog", overgeblevenSchepen, "schepen over.")
+    printScreen(bordSpelen)
+    score = raden(bordSchepen, bordSpelen, score, bordgrootte)
+    time.sleep(.75) #mag dit? kleine delay zorgt voor soepelere erveraring
+    return score
 
 def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met programma
     while True:
@@ -157,30 +196,42 @@ def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met p
             bordgrootte = int(getVar(1))
             bordAschepen = getBord(1, bordgrootte)
             bordBspelen =  getBord(2, bordgrootte)
-            score = int(getVar(2))
-            schepen = int(getVar(3)) 
-            beurten = int(getVar(4))
+            bordBschepen = getBord(3, bordgrootte)
+            bordAspelen = getBord(4, bordgrootte)
+            scoreA = int(getVar(2))
+            scoreB = int(getVar(3))
+            schepen = int(getVar(4)) 
         else:
             welkom()
             bordgrootte = bordsize()
             bordAschepen = maakBord(bordgrootte)
             bordBspelen = maakBord(bordgrootte)
+            bordBschepen = maakBord(bordgrootte)
+            bordAspelen = maakBord(bordgrootte)
             schepen = math.floor(bordgrootte * (math.sqrt(bordgrootte)/2) -1)#geweldige formule die meestal werkt behalve bij 8
-            score = 0
-            beurten = 0
-            plaatsSchepen(schepen, bordAschepen, bordgrootte)
-        while not(score == schepen):
-            overgeblevenSchepen = schepen - score
-            os.system("cls" if os.name == "nt" else "clear") # ;)
-            print("Er zijn nog", overgeblevenSchepen, "schepen over.")
-            printScreen(bordBspelen)
-            score = raden(bordAschepen, bordBspelen, score, bordgrootte)
-            beurten +=1
-            time.sleep(.75) #mag dit? kleine delay zorgt voor soepelere erveraring
-            data = Data( "Game", bordgrootte, score, schepen, beurten)
-            save(data, bordAschepen, bordBspelen)# saved spel aan het einde van beurt
-        data = Data("Clear", bordgrootte, score, schepen, beurten)
-        save(data, bordAschepen, bordBspelen)
+            scoreA = 0
+            scoreB = 0
+            gamemode = "Y"
+            plaatsSchepen(gamemode, schepen, bordAschepen, bordBschepen, bordgrootte)
+        while not(scoreB == schepen or scoreA == schepen):
+            scoreB = beurt(schepen, scoreB, bordBspelen, bordAschepen, bordgrootte)
+            data = Data("Game", bordgrootte, scoreA, scoreB, schepen)
+            save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen)
+            if not(scoreB == schepen or scoreA == schepen):
+                scoreA = beurt(schepen, scoreA, bordAspelen, bordBschepen, bordgrootte)
+                data = Data("Game", bordgrootte, scoreA, scoreB, schepen)
+                save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen)
+            # overgeblevenSchepen = schepen - score
+            # os.system("cls" if os.name == "nt" else "clear") # ;)
+            # print("Er zijn nog", overgeblevenSchepen, "schepen over.")
+            # printScreen(bordBspelen)
+            # score = raden(bordAschepen, bordBspelen, score, bordgrootte)
+            # beurten +=1
+            # time.sleep(.75) #mag dit? kleine delay zorgt voor soepelere erveraring
+            # data = Data( "Game", bordgrootte, score, schepen, beurten)
+            # save(data, bordAschepen, bordBspelen)# saved spel aan het einde van beurt
+        data = Data("Clear", bordgrootte, scoreA, scoreB, schepen)
+        save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen)
         printScreen(bordBspelen)  
         print("gewonnen")
         input("druk enter om nog een keer te spelen!")
