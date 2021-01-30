@@ -3,8 +3,9 @@ import math
 import os
 import time 
 
-bestand = open("save.txt", "w+")#maakt een save file bij het open van het spel als deze nog niet bestaat
-bestand.close()
+if not os.path.exists("save.txt"):
+    bestand = open("save.txt", "w+")#maakt een save file bij het open van het spel als deze nog niet bestaat
+    bestand.close()
 
 def printScreen(invoer): #functie die het veld overzichtelijk print
     for item in invoer:
