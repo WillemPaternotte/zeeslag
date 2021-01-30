@@ -3,6 +3,9 @@ import math
 import os
 import time 
 
+bestand = open("save.txt", "w+")#maakt een save file bij het open van het spel als deze nog niet bestaat
+bestand.close()
+
 def printScreen(invoer): #functie die het veld overzichtelijk print
     for item in invoer:
         for i in item:
@@ -42,7 +45,7 @@ def bordsize(): #vraagt hoegroot het bord moet zijn
         lengte = input("Hoeveel bij hoeveel moet het bord groot zijn?: ")
     lengte = int(lengte)
     while not(2 < lengte <= 24): #Maximale groot 24x24 want 24 letters in het alfabet kleiner dan 3x3 niet leuk
-        print("De maximale grootte is 24x24 en de minimale grootte ")
+        print("De maximale grootte is 24x24 en de minimale grootte is 3")
         lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
     return lengte
 
@@ -192,7 +195,7 @@ def welkom():
     print(bestand)
     time.sleep(5)
     os.system("cls" if os.name == "nt" else "clear")
-    print("""welkom bij zeeslag,
+    print("""Welkom bij zeeslag,
 ik zal eerst even kort het spel uitleggen.
 Geef als eerst op hoe groot je het bord zou willen hebben.
 Daarna zal de computer een aantal schepen plaatsen afhankelijk van de bordgrootte. 
