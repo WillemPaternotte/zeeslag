@@ -198,10 +198,9 @@ def welkom():
 def beurt(player,schepen, score, bordSpelen, bordSchepen, bordgrootte):
     overgeblevenSchepen = schepen - score
     os.system("cls" if os.name == "nt" else "clear") # ;)
-    print(schepen)
-    print("Er zijn nog", overgeblevenSchepen, "schepen over.")
-    printScreen(bordSpelen)
     if player == "Y":
+        print("Er zijn nog", overgeblevenSchepen, "schepen over.")
+        printScreen(bordSpelen)
         score = raden(bordSchepen, bordSpelen, score, bordgrootte)
     else: 
         score = PCraden(bordSchepen, bordSpelen, score, bordgrootte)
@@ -233,19 +232,34 @@ def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met p
             scoreA = 0
             scoreB = 0
             gamemode = gameMode()
-            plaatsSchepen(gamemode, schepen, bordAschepen, bordBschepen, bordgrootte)
+            plaatsSchepen(gamemode, schepen, bordBschepen, bordAschepen, bordgrootte)
         while not(scoreB == schepen or scoreA == schepen):
+            print("Speler 1 is aan de Beurt")
+            printScreen(bordAspelen)
+            print("Je tegenstander heeft al ", scoreB, "Schepen geraakt")
+            time.sleep(3)
+            os.system("cls" if os.name == "nt" else "clear")
             scoreB = beurt("Y", schepen, scoreB, bordBspelen, bordAschepen, bordgrootte)
             data = Data("Game", bordgrootte, scoreA, scoreB, schepen, gamemode)
             save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen)
             if not(scoreB == schepen or scoreA == schepen):
+                if gamemode == "Y":
+                    print("Speler 2 is aan de Beurt")
+                    printScreen(bordBspelen)
+                    print("Je tegenstander heeft al ", scoreA, "Schepen geraakt")
+                time.sleep(3)
+                os.system("cls" if os.name == "nt" else "clear")
                 scoreA = beurt(gameMode, schepen, scoreA, bordAspelen, bordBschepen, bordgrootte)
                 data = Data("Game", bordgrootte, scoreA, scoreB, schepen, gamemode)
                 save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen)
         data = Data("Clear", bordgrootte, scoreA, scoreB, schepen, gamemode)
-        save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen)
-        printScreen(bordBspelen)  
-        print("gewonnen")
+        save(data, bordAschepen, bordBspelen, bordBschepen, bordAspelen)  
+        if scoreB == schepen:
+            print("speler1 heeft gewonnen!")
+            printScreen(bordBspelen)
+        else:
+            print("speler2 heeft gewonnen!")
+            printScreen(bordAspelen)
         input("druk enter om nog een keer te spelen!")
 
 main()
