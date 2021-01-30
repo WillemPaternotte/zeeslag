@@ -42,7 +42,7 @@ def bordsize():
         lengte = input("Hoeveel bij hoeveel moet het bord groot zijn?: ")
     lengte = int(lengte)
     while not(2 < lengte <= 24): #Maximale groot 24x24 want 24 letters in het alfabet kleiner dan 3x3 niet leuk
-        print("De maximale grootte is 24x24")
+        print("De maximale grootte is 24x24 en de minimale grootte ")
         lengte = int(input("Hoeveel bij hoeveel moet het bord groot zijn?: "))
     return lengte
 
@@ -188,12 +188,13 @@ def gameMode():
     return mode
     
 def welkom():
-    print("""welkom bij zeeslag, ik zal eerst even kort het spel uitleggen.
-            Geef als eerst op hoe groot je het bord zou willen hebben.
-            Daarna zal de computer een aantal schepen plaatsen afhankelijk van de bordgrootte. 
-            Het is aan jou de taak om alle schepen te raken met zo min mogelijk beurten. 
-            Om een schip te raken typ je de coördinaten van de locatie waarvan je denkt dat een schip zit. 
-            Succes! """)
+    print("""welkom bij zeeslag,
+ik zal eerst even kort het spel uitleggen.
+Geef als eerst op hoe groot je het bord zou willen hebben.
+Daarna zal de computer een aantal schepen plaatsen afhankelijk van de bordgrootte. 
+Het is aan jou de taak om alle schepen te raken met zo min mogelijk beurten. 
+Om een schip te raken typ je de coördinaten van de locatie waarvan je denkt dat een schip zit. 
+Succes! """)
 
 def beurt(player,schepen, score, bordSpelen, bordSchepen, bordgrootte):
     overgeblevenSchepen = schepen - score
@@ -208,7 +209,6 @@ def beurt(player,schepen, score, bordSpelen, bordSchepen, bordgrootte):
     time.sleep(.75) #mag dit? kleine delay zorgt voor soepelere erveraring
 
     return score
-
 
 def main(): #hoofdprogramma, verklaart eerst variabelen, daarna while loop met programma
     while True:
