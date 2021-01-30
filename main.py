@@ -188,6 +188,10 @@ def gameMode():
     return mode
     
 def welkom():
+    bestand = open("art.txt").read()
+    print(bestand)
+    time.sleep(5)
+    os.system("cls" if os.name == "nt" else "clear")
     print("""welkom bij zeeslag,
 ik zal eerst even kort het spel uitleggen.
 Geef als eerst op hoe groot je het bord zou willen hebben.
